@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | VenTama</title>
+
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark')
+        else document.documentElement.classList.remove('dark')
+    </script>
+    <link rel="stylesheet" href="./css/tailwind.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script defer type="module">
+        import * as login from "./js/login.js"; window.login = login;
+        if(sessionStorage.getItem("redirect")) {
+            let _ = sessionStorage.getItem("redirect");
+            sessionStorage.clear();
+            sessionStorage.setItem("redirect", _);
+        }
+        else sessionStorage.clear();
+    </script>
+</head>
+<body class="dark:bg-gray-900 dark:text-white text-black">
+    <textarea id="Log" class="w-full dark:bg-gray-900 dark:text-white">
+        
+    </textarea>
+    <div class="bg-white dark:bg-gray-900 dark:text-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col">
+        <!-- Make a headline with a smaller headline underneath it -->
+        <h1 class="text-black dark:bg-gray-900 dark:text-white text-xl">Login</h1>
+        <h2 class="text-gray-600 text-xs">Melden Sie sich mit Ihren Account an</h2> <br> <br>
+    
+          <div class="mb-4 dark:bg-gray-900 dark:text-white">
+            <label class="block text-grey-darker text-sm font-bold mb-2" for="username">
+              Username
+            </label>
+            <input class="shadow dark:bg-gray-900 dark:text-white appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="username" onkeydown="if(event.keyCode == 13) login.login(document.getElementById('username').value, document.getElementById('password').value);" type="text" placeholder="Vorname.Nachname">
+          </div>
+          <div class="mb-6">
+            <label class="block dark:bg-gray-900 dark:text-white text-grey-darker text-sm font-bold mb-2" for="password">
+              Password
+            </label>
+            <input class="shadow dark:bg-gray-900 dark:text-white appearance-none border border-red rounded w-full py-2 px-3 text-grey-darker mb-3" onkeydown="if(event.keyCode == 13) login.login(document.getElementById('username').value, document.getElementById('password').value);" id="password" type="password" placeholder="******************">
+            <p class="text-red text-xs italic">Bitte geben Sie ein Passwort ein</p>
+          </div>
+          <div class="flex items-center justify-between">
+            <button class="bg-blue hover:bg-blue-dark dark:bg-gray-900 dark:text-white text-black font-bold py-2 px-4 rounded" type="button" onclick="login.login(document.getElementById('username').value, document.getElementById('password').value);">
+              Anmelden
+            </button>
+            <!-- <a class="inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker" href="#">
+              Forgot Password?
+            </a> -->
+          </div>
+          <h1>Noch nicht registriert?</h1>
+          <br>
+          <button type="button" id="SignIn" class="btn btn-secondary dark:bg-gray-900 dark:text-white" onclick="register()">
+            Dann registrieren Sie sich jetzt!
+          </button>
+          <br>
+          <div class="row" style="margin:auto">
+            <div id="card-div" class="col-md-3" style="display:none">
+              <div class="card text-center">
+                <div class="card-body">
+                  <h5 class="card-title" id="WelcomeMessage">Please sign-in to see your profile and read your mails</h5>
+                  <div id="profile-div"></div>
+                  <br>
+                  <br>
+                  <button class="btn btn-primary" id="seeProfile" onclick="seeProfile()">See Profile</button>
+                  <br>
+                  <br>
+                  <button class="btn btn-primary" id="readMail" onclick="readMail()">Read Mails</button>
+                </div>
+              </div>
+            </div>
+            <br>
+            <br>
+            <div class="col-md-4">
+              <div class="list-group" id="list-tab" role="tablist">
+              </div>
+            </div>
+            <div class="col-md-5">
+              <div class="tab-content" id="nav-tabContent">
+              </div>
+            </div>
+          </div>
+      </div>
+</body>
+</html>

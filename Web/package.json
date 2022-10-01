@@ -1,0 +1,16 @@
+{
+  "name": "web",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm run clean && tsc && bash ./copy.sh && npm run optimize",
+    "start": "npm run build && serve -s bin",
+    "clean": "rm -rf ./bin",
+    "optimize": "tailwindcss -i ./src/css/tailwind.min.css -o ./bin/css/tailwind.min.css"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,1 @@
+Nearest Neighbour -> CSS = image-rendering: crisp-edge; OR pixelated;
