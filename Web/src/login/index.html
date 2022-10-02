@@ -11,10 +11,16 @@
         import * as index from "../js/backend/index.js";
         window.backend = login;
 
-        const usernameElement = document.getElementById("username");
+        const usernameElement = document.getElementById("email");
         const passwordElement = document.getElementById("password");
         const keepLoggedInElement = document.getElementById("remember");
         const loginButton = document.getElementById("login");
+
+        document.querySelector("form").addEventListener("submit", (ev) =>
+            {
+                ev.preventDefault();
+                login.login(usernameElement.value, passwordElement.value, keepLoggedInElement.checked);
+            });
 
         document.querySelector("button").addEventListener("submit", (ev) => {
             ev.preventDefault();
@@ -47,7 +53,7 @@
         </section>
 
         <section class="mt-10">
-            <form class="flex flex-col" method="POST" action="#">
+            <form class="flex flex-col">
                 <div class="mb-6 pt-3 rounded bg-gray-200">
                     <label class="block text-gray-700 text-sm font-bold mb-2 ml-3" for="email">Email or Username</label>
                     <input type="text" id="email" class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3">

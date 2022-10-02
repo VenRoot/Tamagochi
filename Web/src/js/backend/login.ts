@@ -19,6 +19,7 @@ export const login = async (username: string, password: string, keepLoggedIn: bo
 
     if(x.ok)
     {
+        console.log("Login successful");
         Toastify({
             text: "Login erfolgreich",
             close: true,

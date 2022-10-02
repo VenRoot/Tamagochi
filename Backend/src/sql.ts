@@ -44,7 +44,7 @@ export const query = async <T>(sql: string, values: string[] | number[] = []) =>
 
 
 
-export const getUserData = (username: string) => query(`SELECT * FROM users WHERE username = ?`, [username]).catch(err => {throw err;});
+export const getUserData = (usernameOrEmail: string) => query(`SELECT * FROM users WHERE username = ? OR email = ?`, [usernameOrEmail, usernameOrEmail]).catch(err => {throw err;});
 export const getUserDataByEmail = (email: string) => query(`SELECT * FROM users WHERE email = ?`, [email]).catch(err => {throw err;});
 
 export const createUser = (user: iUser) => query(`INSERT INTO users (username, email, password, Sicherheitsfrage, Sicherheitsantwort) VALUES (?, ?, ?, ?, ?)`, [user.username, user.email, user.password, user.Sicherheitsfrage, user.Sicherheitsantwort]).catch(err => {return Promise.reject(err);});
