@@ -33,7 +33,7 @@ export const encrypt = (text: string) => {
 };
 
 export const decrypt = (text: string) => {
-    console.log(process.env.sessionEncryptionKey)
+    console.log(process.env)
     const key = process.env.sessionEncryptionKey;
     const textParts = text.split(":");
     const iv = Buffer.from(textParts.shift() as string, "hex");

@@ -4,6 +4,11 @@ import { getToken } from "./index.js";
 
 export const login = async (username: string, password: string, keepLoggedIn: boolean) => {
     const token = await getToken();
+    if(keepLoggedIn) 
+    {
+        localStorage.setItem("username", username);
+        localStorage.setItem("token", token);
+    }
     const x = await fetch(`${constants.URLs.BACKEND_URL}${constants.URLs.login}`, {
         method: "POST",
         headers: {
@@ -51,4 +56,11 @@ export const login = async (username: string, password: string, keepLoggedIn: bo
             duration: 3000
         }).showToast();
     }
+}
+
+export const logout = () =>
+{
+    localStorage.removeItem("username");
+    localStorage.removeItem("token");
+    window.location.href = "/login";
 }

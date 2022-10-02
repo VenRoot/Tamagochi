@@ -35,15 +35,18 @@ export const saveFile = <T>(type: "tama" | "setting" | "sessions", relativePath:
 
 export const getAllTamaFiles =  () =>
 {
-    //Get all owners of a file as a string[]
-    const owners = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "data", "owners.json"), "utf-8")) as string[];
-    const basePath = path.join(__dirname, "..", "data", "pets");
-    const res:Tamagochi[] = [];
-    for (const owner of owners) {
-        if (!fs.existsSync(path.join(basePath, owner + ".json"))) continue;
-        const tama = getFile<Tamagochi>("tama", owner + ".json");
-        if (tama === null) continue;
-        res.push(tama);
-    }
-    return res;
+    const tamas = fs.readdirSync(path.join(__dirname, "..", "data", "pets"));
+    return tamas.map(tama => getFile<Tamagochi>("tama", tama));
+
+
+    // const owners = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "data", "owners.json"), "utf-8")) as string[];
+    // const basePath = path.join(__dirname, "..", "data", "pets");
+    // const res:Tamagochi[] = [];
+    // for (const owner of owners) {
+    //     if (!fs.existsSync(path.join(basePath, owner + ".json"))) continue;
+    //     const tama = getFile<Tamagochi>("tama", owner + ".json");
+    //     if (tama === null) continue;
+    //     res.push(tama);
+    // }
+    // return res;
 }

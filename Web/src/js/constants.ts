@@ -5,6 +5,7 @@ export default Object.seal({
         login: "/api/login",
         logout: "/api/logout",
         getUser: "/api/data",
+        tamagochi: "/api/tamagochi",
         getSicherheitsfragen: "/api/sicherheitsfragen",
     }
     

@@ -13,7 +13,11 @@ import { iUser } from "./interface/sql";
 dotenv.config({path: path.join(__dirname, "..", ".env")});
 export const app = express();
 
+console.log(process.env);
+
 import "v8-compile-cache";
+import { Tamagochi } from "./game";
+import { iTamagochiRequest } from "./interface/game";
 
 app.use(bodyParser.json());
 
@@ -94,6 +98,84 @@ app.put(C.urls.login, async (req, res) => {
     else res.status(500).end("Internal Server Error");
 });
 
+/**
+ * @description Returns a tamagotchi for the user
+ */
+app.get(C.urls.tamagochi, async (req, res) => {
+    const token = req.headers["token"] as string;
+    const username = req.headers["username"] as string;
+    if(!token) return res.status(401).send("Unauthorized");
+
+    const user = Token.get(token)?.user;
+    if(!user) return res.status(401).send("Not logged in");
+    if(user.username != username) return res.status(403).send("Permission denied");
+
+    const tamagochi = Tamagochi.instances.find(t => t.owner === user.username);
+    if(!tamagochi) return res.status(404).send("Tamagochi not found");
+
+    res.status(200).json(tamagochi);
+});
+
+/**
+ * @description Creates a tamagotchi for the user
+ */
+
+app.put(C.urls.tamagochi, async (req, res) => {
+    const token = req.headers["token"] as string;
+    const username = req.headers["username"] as string;
+    const tamaName = req.headers["tamaname"] as string;
+    if(!token) return res.status(401).send("Unauthorized");
+    if(!tamaName) return res.status(400).send("Bad Request");
+
+    const user = Token.get(token)?.user;
+    if(!user) return res.status(401).send("Not logged in");
+    if(user.username != username) return res.status(403).send("Permission denied");
+
+    const tamagochi = Tamagochi.instances.find(t => t.owner === user.username);
+    if(tamagochi) return res.status(400).send("You currently can only have one Tamagochi at a time");
+
+    try
+    {
+        const newTamagochi = Tamagochi.newTama(tamaName, username);
+        //Send the new tamagotchi to the user
+        res.status(200).json(newTamagochi).end();
+    }
+    catch(err)
+    {
+        console.log(err);
+        if(!res.writableEnded) return res.status(500).end("Internal Server Error");
+    }
+});
+
+/**
+ * @description Handles the request to modify the tamagotchi
+ */
+app.post(C.urls.tamagochi, async (req, res) => {
+    const token = req.headers["token"] as string;
+    const username = req.headers["username"] as string;
+    if(!token) return res.status(401).send("Unauthorized");
+
+    const user = Token.get(token)?.user;
+    if(!user) return res.status(401).send("Not logged in");
+    if(user.username != username) return res.status(403).send("Permission denied");
+    
+    const tamagochi = Tamagochi.instances.find(t => t.owner === user.username);
+    if(!tamagochi) return res.status(404).send("Tamagochi not found");
+
+    const body = req.body as iTamagochiRequest;
+    if(!body) return res.status(400).send("Bad Request");
+
+    try
+    {
+        tamagochi.handle(body);
+        res.status(200).json(tamagochi).end();
+    }
+    catch(err)
+    {
+        console.log(err);
+        if(!res.writableEnded) return res.status(500).end("Internal Server Error");
+    }
+});
 
 
 app.get(C.urls.getSicherheitsfragen, (req, res) => {

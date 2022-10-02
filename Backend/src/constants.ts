@@ -48,6 +48,11 @@ export default Object.seal({
          * @description Entrypoint for getting the Security Questions
          */
         getSicherheitsfragen: "/api/sicherheitsfragen",
+
+        /**
+         * @description Entrypoint for getting the Tamagochi
+         */
+        tamagochi: "/api/tamagochi",
     },
     paths:
     {
