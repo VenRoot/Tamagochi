@@ -68,7 +68,8 @@ app.post(C.urls.login, async (req, res) => {
 
     let appened = Token.append(token, {
         username: user.username,
-        keepLoggedIn
+        //Check if keepLoggedIn is a boolean, if not, try to parse it
+        keepLoggedIn: typeof keepLoggedIn === "boolean" ? keepLoggedIn : keepLoggedIn === "true"
     });
     if(!appened) return res.status(400).send("Bad login: Token not found");
     res.status(200).end("OK");

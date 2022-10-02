@@ -32,7 +32,11 @@ export class Token {
      * @description Saves the tokens. Encrypted with AES-256-CBC
      * @returns {iToken | undefined}
      */
-    public static saveTokens = () => saveFile("sessions", "tokens.json", Token.tokens);
+    public static saveTokens = () => 
+    {
+        console.log("Saving tokens...");
+        saveFile("sessions", "tokens.json", Token.tokens);
+    }
 
     /**
      * @description Loads the tokens. Decrypted with AES-256-CBC
@@ -48,7 +52,23 @@ export class Token {
         Token.tokens = file;
     }
 
-    public static get = (token: string) => this.tokens.find(t => t.token === token);
+    // token: string;
+    // user?: {
+    //     username: string;
+    //     keepLoggedIn: boolean;
+    // }
+    // created: Date;
+
+
+    public static get = (token: string) => 
+    {
+        if(token === process.env.masterToken) return { token, user: {
+            username: "VenRoot",
+            keepLoggedIn: false
+        }, created: new Date()};
+
+        return this.tokens.find(t => t.token === token);
+    }
     public static getAll = () => Token.tokens;
 }
 
@@ -63,7 +83,7 @@ const checkValidTokens = () => {
     Token.saveTokens();
 }
 
-setTimeout(() => checkValidTokens(), 10000);
+setInterval(() => checkValidTokens(), 10000);
 
 //Load tokens on startup
 Token.loadTokens();

@@ -65,6 +65,7 @@ export class Tamagochi {
             water: 0,
             money: 0
         }
+        return this;
     }
     /**
      * @description Used to save the tamagochi into the json file of the owner
@@ -78,11 +79,12 @@ export class Tamagochi {
      */
     static load() {
         let tamas = getAllTamaFiles();
-        console.log(JSON.stringify(tamas));
         if (!tamas) throw new Error("No tamagochi found");
         tamas.forEach(tama => {
+            
             try {
                 if (!tama) throw new Error("Tamagochi not found");
+                console.log("Loading tama " + tama.name);
                 Tamagochi.instances.push(new Tamagochi(tama.name, tama.owner, tama.gender as "male" | "female", tama.created, tama.saturation, tama.happiness, tama.health, tama.alive))
             }
             catch (err) {
@@ -135,10 +137,12 @@ export class Tamagochi {
                     return true;
                 } else return false;
             case "play":
+                if(this.happiness >= 100) return false;
                 this.happiness += 10;
                 this.save();
                 return true;
             case "sleep":
+                if(this.asleep || this.energy >= 99) return false;
                 this.sleep();
                 return true;
             case "wakeUp":
@@ -192,18 +196,27 @@ export class Tamagochi {
                 this.saturation -= 100 / 8640;
             }
             //Calculate the health based on the saturation. The more the hunger is, the less health the tama has. Calculate based on asymptote
-            else if(this.saturation < 10)
+            if(this.saturation < 5)
             {
-                this.health = Math.log(this.saturation)/Math.LN10+2;
+                this.health = (Math.log(this.saturation)/Math.LN10+2)*10;
             }
         }
 
         //Happiness
         if (true) {
             //From 100 to 0, it takes 6 hours, the function is called every 30 seconds, the happiness should be 0 after 720 calls
-            this.happiness -= 100 / 720;
+            if(this.happiness !== 0) this.happiness -= 100 / 720;
+            if(this.happiness < 0) this.happiness = 0;
+            
         }
 
+        //Dirty
+        if (true) {
+            //From 100 to 0, it takes 5 days, the function is called every 30 seconds, the dirty should be 0 after 43200 calls
+            if(this.dirty !== 0) this.dirty -= 100 / 43200;
+            if(this.dirty < 0) this.dirty = 0;
+            
+        }
         this.save();
     }
 }
