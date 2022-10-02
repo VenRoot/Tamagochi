@@ -40,6 +40,11 @@ export class Token {
     public static loadTokens = () => {
         let file = getFile<iToken[]>("sessions", "tokens.json");
         if(!file) return console.warn("Could not load tokens");
+        file.forEach(t => {
+            // We need to recreate the object to get the correct prototype with all the methods
+            t.created = new Date(t.created);
+            Token.tokens.push(t);
+        })
         Token.tokens = file;
     }
 
@@ -48,13 +53,17 @@ export class Token {
 }
 
 //Schedule a job to remove all expired tokens every 5 minutes
-s.scheduleJob("*/5 * * * *", () => {
+s.scheduleJob("*/5 * * * *", () => checkValidTokens());
+
+const checkValidTokens = () => {
     Token.tokens = Token.tokens.filter(t => {
         if(t.user?.keepLoggedIn) return true;
         return Date.now() - t.created.getTime() < 600000;
     });
     Token.saveTokens();
-});
+}
+
+setTimeout(() => checkValidTokens(), 10000);
 
 //Load tokens on startup
 Token.loadTokens();

@@ -5,7 +5,7 @@ import bodyParser from "body-parser";
 import crypto from "crypto";
 import { Token } from "./token";
 import C from "./constants";
-import { createUser, getUserData, query } from "./sql";
+import { createUser, getUserData, getUserNameAndMail, query } from "./sql";
 import fs from "fs";
 import { RowDataPacket } from "mysql2/promise";
 import { authUser, hashPassword } from "./crypto";
@@ -50,14 +50,23 @@ app.post(C.urls.login, async (req, res) => {
     const {username, password, keepLoggedIn} = req.body;
     const token = req.headers["token"] as string;
     if(!username || !password || !token) return res.status(400).send("Bad Request");
+
+    const user = (await getUserNameAndMail(username))[0];
+    if(!user) return res.status(404).send("User not found");
+
+    //Checks if the user is already logged in with the same token
     if(Token.get(token)?.user) return res.status(400).send("Bad login: User already logged in");
 
-    if(await authUser(username, password, res) != true) return;
+    let allTokens = Token.getAll();
+    if(allTokens.find(t => t.user?.username === user.username || t.user?.username === user.email)) return res.status(400).send("Bad login: User already logged in");
 
-    Token.append(token, {
-        username,
+    if(await authUser(user.username, password, res) != true) return;
+
+    let appened = Token.append(token, {
+        username: user.username,
         keepLoggedIn
     });
+    if(!appened) return res.status(400).send("Bad login: Token not found");
     res.status(200).end("OK");
 });
 

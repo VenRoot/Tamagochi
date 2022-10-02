@@ -16,6 +16,7 @@
         const keepLoggedInElement = document.getElementById("remember");
         const loginButton = document.getElementById("login");
 
+        index.getToken();
         document.querySelector("form").addEventListener("submit", (ev) =>
             {
                 ev.preventDefault();
@@ -26,6 +27,7 @@
             ev.preventDefault();
             login.login(usernameElement.value, passwordElement.value, keepLoggedInElement.checked);
         });
+
     </script>
 	<meta name="author" content="David Grzyb">
     <meta name="description" content="">
