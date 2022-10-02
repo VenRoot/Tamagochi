@@ -11,6 +11,7 @@ declare global {
             MYSQL_URL: string;
 
             tamaBasePath: string;
+            sessionEncryptionKey: string;
         }
     }
 }

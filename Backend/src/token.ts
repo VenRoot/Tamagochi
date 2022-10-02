@@ -1,6 +1,8 @@
 import { iToken } from "./interface/token";
 import crypto from "crypto";
-
+import s from "node-schedule";
+import fs from "fs";
+import { getFile, saveFile } from "./files";
 
 export class Token {
     static tokens: iToken[] = [];
@@ -26,7 +28,33 @@ export class Token {
         Token.tokens[index].user = user;
         return true;
     }
+    /**
+     * @description Saves the tokens. Encrypted with AES-256-CBC
+     * @returns {iToken | undefined}
+     */
+    public static saveTokens = () => saveFile("sessions", "tokens.json", Token.tokens);
+
+    /**
+     * @description Loads the tokens. Decrypted with AES-256-CBC
+     */
+    public static loadTokens = () => {
+        let file = getFile<iToken[]>("sessions", "tokens.json");
+        if(!file) return console.warn("Could not load tokens");
+        Token.tokens = file;
+    }
 
     public static get = (token: string) => this.tokens.find(t => t.token === token);
     public static getAll = () => Token.tokens;
 }
+
+//Schedule a job to remove all expired tokens every 5 minutes
+s.scheduleJob("*/5 * * * *", () => {
+    Token.tokens = Token.tokens.filter(t => {
+        if(t.user?.keepLoggedIn) return true;
+        return Date.now() - t.created.getTime() < 600000;
+    });
+    Token.saveTokens();
+});
+
+//Load tokens on startup
+Token.loadTokens();

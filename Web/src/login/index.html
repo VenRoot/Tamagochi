@@ -2,88 +2,80 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | VenTama</title>
-
-    <script>
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark')
-        else document.documentElement.classList.remove('dark')
-    </script>
-    <link rel="stylesheet" href="./css/tailwind.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../js/modules/toastify/toastify.css">
+    <title>Login</title>
     <script defer type="module">
-        import * as login from "./js/login.js"; window.login = login;
-        if(sessionStorage.getItem("redirect")) {
-            let _ = sessionStorage.getItem("redirect");
-            sessionStorage.clear();
-            sessionStorage.setItem("redirect", _);
-        }
-        else sessionStorage.clear();
+        import * as login from "../js/backend/login.js";
+        import * as index from "../js/backend/index.js";
+        window.backend = login;
+
+        const usernameElement = document.getElementById("username");
+        const passwordElement = document.getElementById("password");
+        const keepLoggedInElement = document.getElementById("remember");
+        const loginButton = document.getElementById("login");
+
+        document.querySelector("button").addEventListener("submit", (ev) => {
+            ev.preventDefault();
+            login.login(usernameElement.value, passwordElement.value, keepLoggedInElement.checked);
+        });
     </script>
+	<meta name="author" content="David Grzyb">
+    <meta name="description" content="">
+
+    <link href="../css/tailwind.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .body-bg {
+            background-color: #9921e8;
+            background-image: linear-gradient(315deg, #9921e8 0%, #5f72be 74%);
+        }
+    </style>
 </head>
-<body class="dark:bg-gray-900 dark:text-white text-black">
-    <textarea id="Log" class="w-full dark:bg-gray-900 dark:text-white">
-        
-    </textarea>
-    <div class="bg-white dark:bg-gray-900 dark:text-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col">
-        <!-- Make a headline with a smaller headline underneath it -->
-        <h1 class="text-black dark:bg-gray-900 dark:text-white text-xl">Login</h1>
-        <h2 class="text-gray-600 text-xs">Melden Sie sich mit Ihren Account an</h2> <br> <br>
-    
-          <div class="mb-4 dark:bg-gray-900 dark:text-white">
-            <label class="block text-grey-darker text-sm font-bold mb-2" for="username">
-              Username
-            </label>
-            <input class="shadow dark:bg-gray-900 dark:text-white appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="username" onkeydown="if(event.keyCode == 13) login.login(document.getElementById('username').value, document.getElementById('password').value);" type="text" placeholder="Vorname.Nachname">
-          </div>
-          <div class="mb-6">
-            <label class="block dark:bg-gray-900 dark:text-white text-grey-darker text-sm font-bold mb-2" for="password">
-              Password
-            </label>
-            <input class="shadow dark:bg-gray-900 dark:text-white appearance-none border border-red rounded w-full py-2 px-3 text-grey-darker mb-3" onkeydown="if(event.keyCode == 13) login.login(document.getElementById('username').value, document.getElementById('password').value);" id="password" type="password" placeholder="******************">
-            <p class="text-red text-xs italic">Bitte geben Sie ein Passwort ein</p>
-          </div>
-          <div class="flex items-center justify-between">
-            <button class="bg-blue hover:bg-blue-dark dark:bg-gray-900 dark:text-white text-black font-bold py-2 px-4 rounded" type="button" onclick="login.login(document.getElementById('username').value, document.getElementById('password').value);">
-              Anmelden
-            </button>
-            <!-- <a class="inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker" href="#">
-              Forgot Password?
-            </a> -->
-          </div>
-          <h1>Noch nicht registriert?</h1>
-          <br>
-          <button type="button" id="SignIn" class="btn btn-secondary dark:bg-gray-900 dark:text-white" onclick="register()">
-            Dann registrieren Sie sich jetzt!
-          </button>
-          <br>
-          <div class="row" style="margin:auto">
-            <div id="card-div" class="col-md-3" style="display:none">
-              <div class="card text-center">
-                <div class="card-body">
-                  <h5 class="card-title" id="WelcomeMessage">Please sign-in to see your profile and read your mails</h5>
-                  <div id="profile-div"></div>
-                  <br>
-                  <br>
-                  <button class="btn btn-primary" id="seeProfile" onclick="seeProfile()">See Profile</button>
-                  <br>
-                  <br>
-                  <button class="btn btn-primary" id="readMail" onclick="readMail()">Read Mails</button>
+<body class="body-bg min-h-screen pt-12 md:pt-20 pb-6 px-2 md:px-0" style="font-family:'Lato',sans-serif;">
+    <header class="max-w-lg mx-auto">
+        <a href="#">
+            <h1 class="text-4xl font-bold text-white text-center">Startup</h1>
+        </a>
+    </header>
+
+    <main class="bg-white max-w-lg mx-auto p-8 md:p-12 my-10 rounded-lg shadow-2xl">
+        <section>
+            <h3 class="font-bold text-2xl">Welcome to LOL</h3>
+            <p class="text-gray-600 pt-2">Sign in to your account.</p>
+        </section>
+
+        <section class="mt-10">
+            <form class="flex flex-col" method="POST" action="#">
+                <div class="mb-6 pt-3 rounded bg-gray-200">
+                    <label class="block text-gray-700 text-sm font-bold mb-2 ml-3" for="email">Email or Username</label>
+                    <input type="text" id="email" class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3">
                 </div>
-              </div>
-            </div>
-            <br>
-            <br>
-            <div class="col-md-4">
-              <div class="list-group" id="list-tab" role="tablist">
-              </div>
-            </div>
-            <div class="col-md-5">
-              <div class="tab-content" id="nav-tabContent">
-              </div>
-            </div>
-          </div>
-      </div>
+                <div class="mb-6 pt-3 rounded bg-gray-200">
+                    <label class="block text-gray-700 text-sm font-bold mb-2 ml-3" for="password">Password</label>
+                    <input type="password" id="password" class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3">
+                </div>
+                <div class="flex justify-start">
+                    <input type="checkbox" id="remember">
+                    <label for="remember" class="text-sm text-gray-700 ml-2">Remember Me</label>
+                </div>
+                <div class="flex justify-end">
+                    <a href="#" class="text-sm text-purple-600 hover:text-purple-700 hover:underline mb-6">Forgot your password?</a>
+                </div>
+                <button class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200" type="submit">Sign In</button>
+            </form>
+        </section>
+    </main>
+
+    <div class="max-w-lg mx-auto text-center mt-12 mb-6">
+        <p class="text-white">Don't have an account? <a href="#" class="font-bold hover:underline">Sign up</a>.</p>
+    </div>
+
+    <footer class="max-w-lg mx-auto flex justify-center text-white">
+        <a href="#" class="hover:underline">Contact</a>
+        <span class="mx-3">•</span>
+        <a href="#" class="hover:underline">Privacy</a>
+    </footer>
 </body>
 </html>

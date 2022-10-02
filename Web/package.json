@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npm run clean && concurrently \"bash ./copy.sh\" \"node ../watch.js\" \"tsc --watch\" \"tailwindcss -o bin/css/tailwind.css --watch\" \"serve -l tcp://0.0.0.0:8080 bin/\"",
     "build": "npm run clean && tsc && bash ./copy.sh && npm run optimize",
     "start": "npm run build && serve -s bin",
     "clean": "rm -rf ./bin",
@@ -12,5 +13,8 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "chokidar": "^3.5.3"
+  }
 }

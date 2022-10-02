@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../js/modules/toastify/toastify.css">
+    <title>Register</title>
+    <script defer type="module">
+        import * as register from "../js/backend/register.js";
+        import * as index from "../js/backend/index.js";
+        window.backend = register;
+
+        window.onload = () => {
+            index.getToken();
+            const usernameElement = document.getElementById("username");
+            const passwordElement = document.getElementById("password");
+            const emailElement = document.getElementById("email");
+            const passwordRepeatElement = document.getElementById("password-repeat");
+            const securityQuestionElement = document.getElementById("securityQuestion");
+            const securityAnswerElement = document.getElementById("securityQuestionAnswer");
+            const ButtonElement = document.getElementById("registerButton");
+            const hintElement = document.getElementById("hint")
+
+            document.querySelector("form").addEventListener("submit", (ev) =>
+            {
+                ev.preventDefault();
+                register.register(usernameElement.value, emailElement.value, passwordElement.value, securityQuestionElement.value, securityAnswerElement.value);
+            });
+            document.querySelectorAll("input").forEach(input => {
+                input.addEventListener("input", () => {
+                    register.checkValues(usernameElement, email, passwordElement, passwordRepeatElement, securityAnswerElement, ButtonElement, hintElement);
+                });
+            });
+
+            /**
+             * @params {string} options
+             */
+            register.appendSecurityQuestions(document.getElementById("securityQuestion"));
+        }
+
+    </script>
+
+    <link href="../css/tailwind.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .body-bg {
+            background-color: #9921e8;
+            background-image: linear-gradient(315deg, #9921e8 0%, #5f72be 74%);
+        }
+    </style>
+</head>
+
+<body class="body-bg min-h-screen pt-12 md:pt-16 pb-6 px-2 md:px-0" style="font-family:'Lato',sans-serif;">
+    <header class="max-w-lg mx-auto">
+        <a href="#">
+            <h1 class="text-4xl font-bold text-white text-center">Startup</h1>
+        </a>
+    </header>
+
+    <main class="bg-white max-w-lg mx-auto p-8 md:p-12 my-10 rounded-lg shadow-2xl">
+        <section>
+            <h3 class="font-bold text-2xl">Welcome to Pet, an OSS game by Ven</h3>
+            <p class="text-gray-600 pt-2">Sign up to start now!</p>
+        </section>
+
+        <section class="mt-10">
+            <form class="flex flex-col">
+                <div class="mb-6 pt-3 rounded bg-gray-200 dark:bg-gray-700">
+                    <label class="block text-gray-700 dark:text-white text-sm font-bold mb-2 ml-3"
+                        for="username">Username</label>
+                    <input type="text" id="username"
+                        class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3">
+                </div>
+                <div class="mb-6 pt-3 rounded bg-gray-200 dark:bg-gray-700">
+                    <label class="block text-gray-700 dark:text-white text-sm font-bold mb-2 ml-3"
+                        for="email">Email</label>
+                    <input type="email" id="email"
+                        class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3">
+                </div>
+                <div class="mb-6 pt-3 rounded bg-gray-200 dark:bg-gray-700">
+                    <label class="block text-gray-700 dark:text-white text-sm font-bold mb-2 ml-3"
+                        for="password">Password</label>
+                    <input type="password" id="password"
+                        class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3">
+                </div>
+                <div class="mb-6 pt-3 rounded bg-gray-200 dark:bg-gray-700">
+                    <label class="block text-gray-700 dark:text-white text-sm font-bold mb-2 ml-3" for="password">Repeat
+                        Password</label>
+                    <input type="password" id="password-repeat"
+                        class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3">
+                </div>
+                <div class="mb-6 pt-3 rounded bg-gray-200 dark:bg-gray-700">
+                    <h2 class="text-black dark:text-white">Security Question</h2>
+                    <select name="securityQuestion" id="securityQuestion"></select> <br>
+                    <input type="text" id="securityQuestionAnswer"
+                        class="border-2 border-black dark:border-white w-full ">
+                </div>
+                <button
+                    class="bg-purple-300 hover:bg-purple-400 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200"
+                    id="registerButton" type="submit">Sign Up</button>
+                <p id="hint" class="text-red-500"></p>
+            </form>
+        </section>
+    </main>
+
+    <div class="max-w-lg mx-auto text-center mt-12 mb-6">
+        <p class="text-white">Already have an account? <a href="/login" class="font-bold hover:underline">Sign in</a>.
+        </p>
+    </div>
+
+    <footer class="max-w-lg mx-auto flex justify-center text-white">
+        <a href="#" class="hover:underline">Contact</a>
+        <span class="mx-3">•</span>
+        <a href="#" class="hover:underline">Privacy</a>
+    </footer>
+</body>
+<a style="display: none;" class="bg-purple-300 hover:bg-purple-400"></a>
+</html>

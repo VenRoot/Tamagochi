@@ -23,7 +23,7 @@ export default Object.seal({
     /**
      * @description Entrypoints for Backend API
      */
-    paths: {
+    urls: {
         /**
          * @description Entrypoint for getting a token
          */
@@ -43,6 +43,15 @@ export default Object.seal({
          * @description Entrypoint for getting the user data
          */
         getUser: "/api/data",
+
+        /**
+         * @description Entrypoint for getting the Security Questions
+         */
+        getSicherheitsfragen: "/api/sicherheitsfragen",
+    },
+    paths:
+    {
+        Sicherheitsfragen: path.join(__dirname, "..", "data", "persistant_data", "Sicherheitsfragen.json")
     },
     tamagochi:
     {
